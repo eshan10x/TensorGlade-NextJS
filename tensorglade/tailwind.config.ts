@@ -12,6 +12,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primarytext: "#000000",
+        hoverprimary: "#FF7518"
       },
     },
   },
