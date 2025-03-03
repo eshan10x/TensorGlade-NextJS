@@ -15,7 +15,7 @@ const About = () => {
         <div className="flex flex-col items-center mt-6">
           <iframe
             className="w-full md:w-[800px] h-[300px] md:h-[450px] rounded-2xl shadow-lg"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube.com/embed/ZVnjOPwW4ZA?si=otfGybLpKqLl_P1x"
             title="YouTube video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -29,9 +29,9 @@ const About = () => {
             className="w-full md:w-80 h-60 object-cover rounded-lg shadow-lg"
           />
   
-          <div className="bg-green-400 p-6 rounded-lg shadow-lg text-white text-center w-full md:w-64">
-            <h3 className="text-xl font-bold">About Us</h3>
-            <p className="text-sm mt-2 text-gray-900">
+          <div className="p-6 rounded-lg text-primarytext text-left w-full md:w-64">
+            <h3 className="text-xl font-bold">How we operate</h3>
+            <p className="text-sm mt-2 text-lg">
               We are a team of capable and creative engineers who develop software products and provide digital solutions to grow your ideas.
             </p>
           </div>

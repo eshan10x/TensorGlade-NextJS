@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import About from "@/components/about";
+import Services from "@/components/services";
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <Navbar />
       <main className="flex flex-col gap-12 row-start-2 items-center w-full max-w-6xl">
         <About />
+        <Services/>
       </main>
     </div>
   );
