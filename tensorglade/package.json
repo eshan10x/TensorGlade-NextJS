@@ -9,16 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "framer-motion": "^12.4.10",
+    "lucide-react": "^0.477.0",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scroll": "^1.9.3"
+    "react-scroll": "^1.9.3",
+    "swiper": "^11.2.5",
+    "three": "^0.175.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-scroll": "^1.8.10",
+    "@types/swiper": "^6.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",

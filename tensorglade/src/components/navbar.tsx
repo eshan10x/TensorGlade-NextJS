@@ -7,9 +7,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+    <nav className="fixed top-0 left-0 w-full bg-white z-50">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 className="text-2xl font-bold text-primarytext">TensorGlade</h1>
+        <h1 className="text-2xl font-bold text-hoverprimary">TensorGlade</h1>
         
         <button
           className="md:hidden p-2 rounded bg-gray-200"

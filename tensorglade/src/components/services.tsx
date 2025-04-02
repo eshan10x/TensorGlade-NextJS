@@ -1,8 +1,9 @@
-import { servicesData } from "@/data/servicesdata"
+import { servicesData } from "@/data/servicesdata";
+import Image from "next/image";
 
 const Services = () => {
   return (
-    <section className="py-16 px-4 md:px-16 text-primarytext">
+    <section id="services" className="w-full max-w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-16 text-primarytext mx-auto">
       {servicesData.map((service, index) => (
         <div
           key={service.id}
@@ -10,10 +11,9 @@ const Services = () => {
             index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
           }`}
         >
-          {/* Text Content */}
           <div className="flex-1 text-left">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{service.title}</h2>
-            <p className="text-lg text-gray-600 mb-6">{service.description}</p>
+            <p className="text-lg text-gray-primary mb-6">{service.description}</p>
 
             <div className="flex flex-col gap-4">
               {service.points.map((point, idx) => (
@@ -25,12 +25,13 @@ const Services = () => {
             </div>
           </div>
 
-          {/* Image */}
           <div className="flex-1 flex justify-center">
-            <img
+            <Image
               src={service.image}
               alt={service.title}
-              className="w-full max-w-lg h-auto rounded-lg shadow-lg"
+              width={500}
+              height={300}
+              className="w-full max-w-lg h-auto rounded-lg"
             />
           </div>
         </div>

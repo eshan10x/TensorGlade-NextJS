@@ -8,7 +8,7 @@ export const servicesData = [
         { text: "Hire an employee with EOR", icon: "🛠️" },
         { text: "Hire and manage contractors", icon: "📄" },
       ],
-      image: "../../public/service1.png",
+      image: "/service1.png",
     },
     {
       id: 2,
