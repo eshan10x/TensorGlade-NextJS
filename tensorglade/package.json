@@ -25,6 +25,7 @@
     "@types/react-dom": "^19",
     "@types/react-scroll": "^1.8.10",
     "@types/swiper": "^6.0.0",
+    "@types/three": "^0.175.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",
