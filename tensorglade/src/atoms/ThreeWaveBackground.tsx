@@ -1,181 +1,118 @@
+// src/atoms/ThreeWaveBackground.tsx
 'use client'
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 
 const ThreeWaveBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollPosition, setScrollPosition] = useState(0)
-  
+
   useEffect(() => {
     if (!containerRef.current) return
-    
-    // Setup
+
+    // Scene setup
     const scene = new THREE.Scene()
+    scene.background = new THREE.Color('#ffffff')
+
     const camera = new THREE.PerspectiveCamera(
-      60,
+      75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     )
-    camera.position.set(0, 0, 5)
-    
+    camera.position.set(0, 0, 30)
+    camera.lookAt(0, 0, 0)
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
-    
-    // Clear existing content and append the renderer
+
+    // Clear existing content and append renderer
     if (containerRef.current.firstChild) {
       containerRef.current.removeChild(containerRef.current.firstChild)
     }
     containerRef.current.appendChild(renderer.domElement)
-    
-    // Create the wave geometry
-    const geometry = new THREE.PlaneGeometry(10, 10, 128, 128)
-    
-    // Wireframe material for mesh view
-    const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x4285f4,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.7
-    })
-    
-    // Shader material for the waves
-    const shaderMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        u_time: { value: 0 },
-        u_resolution: { value: new THREE.Vector2() },
-        u_color1: { value: new THREE.Color('#1e3791') }, // Deep blue
-        u_color2: { value: new THREE.Color('#4285f4') }, // Lighter blue
-        u_wireframe: { value: true } // Control wireframe visibility in shader
-      },
-      vertexShader: `
-        uniform float u_time;
-        
-        varying vec2 vUv;
-        varying float vElevation;
-        
-        // Simplex 2D noise
-        vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
 
-        float snoise(vec2 v){
-          const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                             -0.577350269189626, 0.024390243902439);
-          vec2 i  = floor(v + dot(v, C.yy) );
-          vec2 x0 = v -   i + dot(i, C.xx);
-          vec2 i1;
-          i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-          vec4 x12 = x0.xyxy + C.xxzz;
-          x12.xy -= i1;
-          i = mod(i, 289.0);
-          vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-                           + i.x + vec3(0.0, i1.x, 1.0 ));
-          vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-                                dot(x12.zw,x12.zw)), 0.0);
-          m = m*m ;
-          m = m*m ;
-          vec3 x = 2.0 * fract(p * C.www) - 1.0;
-          vec3 h = abs(x) - 0.5;
-          vec3 ox = floor(x + 0.5);
-          vec3 a0 = x - ox;
-          m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-          vec3 g;
-          g.x  = a0.x  * x0.x  + h.x  * x0.y;
-          g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-          return 130.0 * dot(m, g);
-        }
-        
-        void main() {
-          vUv = uv;
-          
-          // Calculate multiple noise values at different frequencies
-          float noise1 = snoise(vUv * 3.0 + u_time * 0.1) * 0.5;
-          float noise2 = snoise(vUv * 6.0 - u_time * 0.15) * 0.25;
-          float noise3 = snoise(vUv * 12.0 + u_time * 0.05) * 0.125;
-          
-          // Combine noise values
-          vElevation = noise1 + noise2 + noise3;
-          
-          // Apply elevation to vertex
-          vec3 newPosition = position;
-          newPosition.z += vElevation * 0.5;
-          
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec2 u_resolution;
-        uniform vec3 u_color1;
-        uniform vec3 u_color2;
-        uniform bool u_wireframe;
-        
-        varying vec2 vUv;
-        varying float vElevation;
-        
-        void main() {
-          // Gradient based on elevation
-          float mixFactor = (vElevation + 0.5) * 0.5; // Normalize to 0-1 range
-          vec3 color = mix(u_color1, u_color2, mixFactor);
-          
-          // Add more brightness where elevation is higher
-          color += vec3(0.1, 0.1, 0.2) * mixFactor;
-          
-          gl_FragColor = vec4(color, 0.3); // Very transparent for the main surface
-        }
-      `,
-      transparent: true,
-    })
-    
-    // Create the main mesh for the wave surface
-    const waveMesh = new THREE.Mesh(geometry, shaderMaterial)
-    waveMesh.rotation.x = -Math.PI / 3
-    scene.add(waveMesh)
-    
-    // Create the wireframe mesh
-    const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial)
-    wireframeMesh.rotation.x = -Math.PI / 3
-    scene.add(wireframeMesh)
-    
-    // Initial camera position
-    camera.position.set(0, 1, 5)
-    
-    // Handle scroll
-    const handleScroll = () => {
-      const newScrollPosition = window.scrollY
-      setScrollPosition(newScrollPosition)
-      
-      // Calculate normalized scroll position (0 to 1) relative to the container
-      const aboutSection = document.getElementById('about')
-      if (!aboutSection) return
-      
-      const aboutRect = aboutSection.getBoundingClientRect()
-      const aboutTop = aboutRect.top
-      const aboutHeight = aboutRect.height
-      const viewportHeight = window.innerHeight
-      
-      // Normalize scroll position within the about section (0 when at top, 1 when at bottom)
-      let normalizedScroll = (-aboutTop) / (aboutHeight - viewportHeight)
-      normalizedScroll = Math.max(0, Math.min(1, normalizedScroll))
-      
-      // Adjust camera angle based on scroll
-      if (normalizedScroll <= 0.5) {
-        // First half of section: tilt camera up
-        const tiltAngle = normalizedScroll * Math.PI * 0.2 // Max 36 degrees
-        camera.rotation.x = tiltAngle
-      } else {
-        // Second half of section: tilt camera down
-        const tiltAngle = (normalizedScroll - 0.5) * Math.PI * 0.2 // Max 36 degrees
-        camera.rotation.x = 0.1 * Math.PI - tiltAngle
+    // Create a grid of particles
+    const particleGeometry = new THREE.BufferGeometry()
+    const width = 500
+    const height = 80
+    const spacing = 0.4
+
+    const positions = []
+    const colors = []
+    const originalY: number[] = []
+
+    const colorStart = new THREE.Color('#FF7518') // Deep blue
+    const colorEnd = new THREE.Color('#ffb347')   // Teal/green
+    const tempColor = new THREE.Color()
+
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        // Position in a grid pattern
+        const x = (i - width / 2) * spacing
+        const z = (j - height / 2) * spacing
+
+        // Create an initial wave pattern for y-position
+        const distance = Math.sqrt(x * x + z * z)
+        const amplitude = 2.5
+        const frequency = 0.15
+        const y = Math.sin(distance * frequency) * amplitude
+
+        positions.push(x, y, z)
+        originalY.push(y)
+
+        // Color gradient from blue to green based on position
+        const ratio = (i + j) / (width + height)
+        tempColor.copy(colorStart).lerp(colorEnd, ratio)
+        colors.push(tempColor.r, tempColor.g, tempColor.b)
       }
-      
-      // Also adjust the camera's position slightly based on scroll
-      camera.position.y = 1 - normalizedScroll * 2 // Move from y=1 to y=-1
     }
-    
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Initial call
-    
-    // Handle resize
+
+    particleGeometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(positions, 3)
+    )
+
+    particleGeometry.setAttribute(
+      'color',
+      new THREE.Float32BufferAttribute(colors, 3)
+    )
+
+    // Material for particle tensors (small squares)
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.15,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      // Use a square texture instead of the default round
+      map: createSquareTexture(),
+      depthWrite: false,
+    })
+
+    // Create our square tensor texture
+    function createSquareTexture() {
+      const canvas = document.createElement('canvas')
+      canvas.width = 128
+      canvas.height = 128
+      const context = canvas.getContext('2d')
+
+      if (context) {
+        context.fillStyle = '#ffffff'
+        context.fillRect(0, 0, 128, 128)
+
+        const texture = new THREE.CanvasTexture(canvas)
+        texture.needsUpdate = true
+        return texture
+      }
+
+      // Fallback if canvas isn't supported
+      return null
+    }
+
+    const particles = new THREE.Points(particleGeometry, particleMaterial)
+    scene.add(particles)
+
+    // Handle window resize
     const handleResize = () => {
       const width = window.innerWidth
       const height = window.innerHeight
@@ -184,51 +121,86 @@ const ThreeWaveBackground = () => {
       camera.updateProjectionMatrix()
       
       renderer.setSize(width, height)
-      shaderMaterial.uniforms.u_resolution.value.set(width, height)
+      // Removed unused shaderMaterial reference
     }
-    
+
     window.addEventListener('resize', handleResize)
-    handleResize()
-    
-    // Animation loop
+
+    // Scroll handler for animating the waves based on scroll position
+    let scrollY = 0
+    let targetScrollY = 0
+
+    const handleScroll = () => {
+      targetScrollY = window.scrollY
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    // Animation
     const clock = new THREE.Clock()
-    
+
     const animate = () => {
       const elapsedTime = clock.getElapsedTime()
-      shaderMaterial.uniforms.u_time.value = elapsedTime
-      
-      // Update mesh positions to match
-      wireframeMesh.position.copy(waveMesh.position)
-      wireframeMesh.rotation.copy(waveMesh.rotation)
-      
-      // Add subtle continuous rotation
-      waveMesh.rotation.z = Math.sin(elapsedTime * 0.1) * 0.05
-      wireframeMesh.rotation.z = waveMesh.rotation.z
-      
+
+      // Smooth scroll transition
+      scrollY += (targetScrollY - scrollY) * 0.05
+
+      // Calculate normalized scroll value for animation effects
+      const scrollFactor = Math.min(scrollY / 1000, 1)
+
+      // Rotate particles slightly based on scroll
+      particles.rotation.x = scrollFactor * -0.5
+      particles.rotation.z = scrollFactor * 0.2
+
+      // Update particle positions for wave animation
+      const positions = particleGeometry.attributes.position.array as Float32Array
+
+      for (let i = 0; i < positions.length / 3; i++) {
+        const ix = i * 3
+        const iy = i * 3 + 1
+        const iz = i * 3 + 2
+
+        const x = positions[ix]
+        const z = positions[iz]
+
+        // Original wave position
+        const baseY = originalY[i]
+
+        // Add time-based animation
+        const moveFactor = Math.sin(elapsedTime * 0.5 + x * 0.5 + z * 0.5)
+
+        // Add scroll interaction
+        positions[iy] = baseY + moveFactor * 0.5 + Math.cos(scrollFactor * 5 + x * 0.2) * scrollFactor * 3
+      }
+
+      particleGeometry.attributes.position.needsUpdate = true
+
+      // Render
       renderer.render(scene, camera)
       requestAnimationFrame(animate)
     }
-    
+
     animate()
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('scroll', handleScroll)
-      geometry.dispose()
-      shaderMaterial.dispose()
-      wireframeMaterial.dispose()
       renderer.dispose()
+      particleGeometry.dispose()
+      particleMaterial.dispose();
+      (particleMaterial.map as THREE.CanvasTexture)?.dispose()
+
       if (containerRef.current && containerRef.current.contains(renderer.domElement)) {
         containerRef.current.removeChild(renderer.domElement)
       }
     }
   }, [])
-  
+
   return (
-    <div 
-      ref={containerRef} 
-      className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden"
+    <div
+      ref={containerRef}
+      className="absolute top-0 left-0 w-full h-full -z-10"
     />
   )
 }
