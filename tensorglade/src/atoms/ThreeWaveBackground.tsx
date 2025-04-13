@@ -1,4 +1,3 @@
-// src/atoms/ThreeWaveBackground.tsx
 'use client'
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
@@ -9,9 +8,7 @@ const ThreeWaveBackground = () => {
   useEffect(() => {
     if (!containerRef.current) return
 
-    // Scene setup
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color('#ffffff')
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -26,26 +23,32 @@ const ThreeWaveBackground = () => {
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
 
-    // Clear existing content and append renderer
     if (containerRef.current.firstChild) {
       containerRef.current.removeChild(containerRef.current.firstChild)
     }
     containerRef.current.appendChild(renderer.domElement)
 
-    // Create a grid of particles
     const particleGeometry = new THREE.BufferGeometry()
-    const width = 500
-    const height = 80
+    const width = 400
+    const height = 110
     const spacing = 0.4
 
     const positions = []
     const colors = []
+    const sizes = [] 
     const originalY: number[] = []
 
-    const colorStart = new THREE.Color('#FF7518') // Deep blue
-    const colorEnd = new THREE.Color('#ffb347')   // Teal/green
+    // Color settings
+    const colorStart = new THREE.Color('#FF7518') 
+    const colorEnd = new THREE.Color('#ffb347')  
     const tempColor = new THREE.Color()
 
+    // Improved symmetrical pattern settings
+    const centerX = 0.5 // Center point (50% from left)
+    const maxSize = 0.6  // Size at the edges
+    const minSize = 0.1  // Reduced size in the middle section
+    
+    // Create a symmetrical density pattern
     for (let i = 0; i < width; i++) {
       for (let j = 0; j < height; j++) {
         // Position in a grid pattern
@@ -58,11 +61,37 @@ const ThreeWaveBackground = () => {
         const frequency = 0.15
         const y = Math.sin(distance * frequency) * amplitude
 
+        // Calculate relative position for size and density adjustments
+        const percentAcross = i / width
+        
+        // Calculate distance from center (0 at center, 1 at edges)
+        const distFromCenter = Math.abs(percentAcross - centerX) * 2 // 0->1 scale
+        
+        // Create a symmetrical skip pattern
+        // Skip more particles near the center, fewer at the edges
+        if (distFromCenter < 0.7) { // Within 70% distance from center
+          const skipProbability = 0.7 * (1 - distFromCenter / 0.7)
+          if (Math.random() < skipProbability) {
+            continue; // Skip this particle
+          }
+        }
+        
+        // Set particle size based on distance from center (symmetrical)
+        let particleSize = maxSize;
+        
+        if (distFromCenter < 0.7) {
+          // Create a U-shaped curve for size (smallest in the middle, largest at edges)
+          // Linear interpolation between min and max size based on distance from center
+          particleSize = minSize + (maxSize - minSize) * (distFromCenter / 0.7);
+        }
+        
         positions.push(x, y, z)
         originalY.push(y)
+        sizes.push(particleSize)
 
-        // Color gradient from blue to green based on position
-        const ratio = (i + j) / (width + height)
+        // Color gradient from orange to light orange based on position
+        // Make this symmetrical too by using distance from center
+        const ratio = (distFromCenter + j / height) / 2 // Blend distance and height factors
         tempColor.copy(colorStart).lerp(colorEnd, ratio)
         colors.push(tempColor.r, tempColor.g, tempColor.b)
       }
@@ -77,17 +106,42 @@ const ThreeWaveBackground = () => {
       'color',
       new THREE.Float32BufferAttribute(colors, 3)
     )
+    
+    particleGeometry.setAttribute(
+      'size',
+      new THREE.Float32BufferAttribute(sizes, 1)
+    )
 
-    // Material for particle tensors (small squares)
-    const particleMaterial = new THREE.PointsMaterial({
-      size: 0.15,
-      vertexColors: true,
+    // Material with custom shader to handle varying sizes
+    const particleMaterial = new THREE.ShaderMaterial({
       transparent: true,
-      opacity: 0.8,
-      // Use a square texture instead of the default round
-      map: createSquareTexture(),
       depthWrite: false,
-    })
+      uniforms: {
+        pointTexture: { value: createSquareTexture() }
+      },
+      vertexShader: `
+        attribute vec3 color;
+        attribute float size;
+        
+        varying vec3 vColor;
+        
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D pointTexture;
+        
+        varying vec3 vColor;
+        
+        void main() {
+          gl_FragColor = vec4(vColor, 0.8) * texture2D(pointTexture, gl_PointCoord);
+        }
+      `
+    });
 
     // Create our square tensor texture
     function createSquareTexture() {
@@ -106,7 +160,7 @@ const ThreeWaveBackground = () => {
       }
 
       // Fallback if canvas isn't supported
-      return null
+      return new THREE.Texture();
     }
 
     const particles = new THREE.Points(particleGeometry, particleMaterial)
@@ -121,7 +175,6 @@ const ThreeWaveBackground = () => {
       camera.updateProjectionMatrix()
       
       renderer.setSize(width, height)
-      // Removed unused shaderMaterial reference
     }
 
     window.addEventListener('resize', handleResize)
@@ -166,11 +219,11 @@ const ThreeWaveBackground = () => {
         // Original wave position
         const baseY = originalY[i]
 
-        // Add time-based animation
-        const moveFactor = Math.sin(elapsedTime * 0.5 + x * 0.5 + z * 0.5)
+        // Add time-based animation - ensure it's symmetrical
+        const moveFactor = Math.sin(elapsedTime * 0.5 + Math.abs(x) * 0.5 + Math.abs(z) * 0.5)
 
-        // Add scroll interaction
-        positions[iy] = baseY + moveFactor * 0.5 + Math.cos(scrollFactor * 5 + x * 0.2) * scrollFactor * 3
+        // Add scroll interaction with symmetrical pattern
+        positions[iy] = baseY + moveFactor * 0.5 + Math.cos(scrollFactor * 5 + Math.abs(x) * 0.2) * scrollFactor * 3
       }
 
       particleGeometry.attributes.position.needsUpdate = true
@@ -188,8 +241,11 @@ const ThreeWaveBackground = () => {
       window.removeEventListener('scroll', handleScroll)
       renderer.dispose()
       particleGeometry.dispose()
-      particleMaterial.dispose();
-      (particleMaterial.map as THREE.CanvasTexture)?.dispose()
+      particleMaterial.dispose()
+      
+      if (particleMaterial.uniforms.pointTexture.value) {
+        particleMaterial.uniforms.pointTexture.value.dispose()
+      }
 
       if (containerRef.current && containerRef.current.contains(renderer.domElement)) {
         containerRef.current.removeChild(renderer.domElement)

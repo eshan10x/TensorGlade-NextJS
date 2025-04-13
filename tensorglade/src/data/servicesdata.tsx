@@ -1,14 +1,14 @@
 export const servicesData = [
     {
       id: 1,
-      title: "Build your team without limits",
+      title: "Secure Funding with AI MVPs, Built with Confidence",
       description:
-        "Employ global talent quickly and compliantly in 150+ countries – without setting up your own legal entity.",
+        " We understand the challenges of launching an AI venture. That's why we offer a no-cost technical research period (1-2 months), giving you a hands-on experience with our team. Following this, we provide a detailed proposal, outlining a stage-wise development plan. Our 'Frontline Risk Assessment' approach ensures that potential project pitfalls are identified and addressed early on, guaranteeing a low-risk, high-impact MVP.",
       points: [
-        { text: "Hire an employee with EOR", icon: "🛠️" },
-        { text: "Hire and manage contractors", icon: "📄" },
+        { text: "Build more than software", icon: "" },
+        { text: "Build investor confidence", icon: "" },
       ],
-      image: "/service1.png",
+      image: "/service3.png",
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ export const servicesData = [
         { text: "Multi-country payroll processing", icon: "🌍" },
         { text: "Automated tax calculations", icon: "📊" },
       ],
-      image: "/images/###",
+      image: "/service2.png",
     },
   ];
   

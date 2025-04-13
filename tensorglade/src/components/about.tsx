@@ -1,87 +1,51 @@
-// src/components/about.tsx
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import dynamic from 'next/dynamic'
+import VideoContainer from "@/atoms/videocontainer";
 
-// Dynamically import the wave background
 const ThreeWaveBackground = dynamic(() => import('../atoms/ThreeWaveBackground'), {
   ssr: false,
   loading: () => (
-    <div className="absolute top-0 left-0 w-full h-full -z-10" />
+    <div className="absolute inset-0 z-0 overflow-hidden" />
   )
 })
 
 const About = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-
-  // Initialize intersection observer for scroll animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view')
-          }
-        })
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1,
-      }
-    )
-
-    const contentElements = document.querySelectorAll('.scroll-animate')
-    contentElements.forEach((el) => observer.observe(el))
-
-    return () => {
-      contentElements.forEach((el) => observer.unobserve(el))
-    }
-  }, [])
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative w-full text-center text-primarytext items-center mb-12 py-16 min-h-screen flex flex-col justify-center overflow-hidden">
-      {/* Full-width particle wave background */}
-      <div className="scroll-animate opacity-0 transition-all duration-1000 ease-out transform translate-y-10 delay-500 mt-12 w-full">
+    <section id="about" className="w-full text-center text-primarytext items-center mb-12 mt-6">
+      <div className="absolute inset-0 -top-16 z-0 overflow-hidden">
         <ThreeWaveBackground />
       </div>
-
-
-      {/* Content overlay */}
-      <div className="relative z-10 w-full mx-auto">
-        <div className="scroll-animate opacity-100 transition-all duration-1000 ease-out">
+      <div className="relative w-full text-center text-primarytext items-center mb-12 py-16 min-h-screen flex flex-col justify-center overflow-hidden">
+        <div className="relative z-10">
           <h2 className="text-4xl md:text-7xl font-bold leading-tight">
             Innovate with Intelligence
           </h2>
-          <h2 className="text-4xl md:text-7xl font-bold leading-tight">
+          <h2 className="text-4xl md:text-6xl font-bold leading-tight">
             AI Solutions for Limitless
           </h2>
-          <h2 className="text-4xl md:text-7xl font-bold leading-tight">
+          <h2 className="text-4xl md:text-6xl font-bold leading-tight">
             Growth
           </h2>
         </div>
 
-        <div className="scroll-animate opacity-100 transition-all duration-1000 ease-out delay-300">
-          <p className="text-lg md:text-2xl mt-8 px-6 md:px-16 max-w-3xl mx-auto text-center">
-            We empower startups with data-driven MVPs and expertly curated datasets. Shape the future by transforming your idea into an AI-Powered MVP today.
-          </p>
-        </div>
 
-        <div className="scroll-animate opacity-100 transition-all duration-1000 ease-out delay-500 mt-12">
-          <div className="flex flex-col items-center">
-            <iframe
-              className="w-full md:w-[800px] h-[300px] md:h-[450px] rounded-2xl shadow-lg"
-              src="https://www.youtube.com/embed/ZVnjOPwW4ZA?si=otfGybLpKqLl_P1x"
-              title="YouTube video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
+        {/* <p className="text-lg md:text-2xl mt-6 px-4 md:px-28">
+        We empower startups with data-driven MVPs and expertly curated datasets. Shape the future by transforming your idea into AI-Powered MVP today
+      </p> */}
+        <p className="text-lg md:text-2xl mt-6 px-6 md:px-16 max-w-5xl mx-auto text-center">
+          We empower startups with data-driven MVPs and expertly curated datasets. Shape the future by transforming your idea into an AI-Powered MVP today.
+        </p>
+
+        <div className="max-w-6xl scroll-animate opacity-100 transition-all duration-1000 ease-out delay-500 mt-12">
+          <VideoContainer
+            videoSrc="/videos/intro.mp4"
+            posterSrc=""
+          />
         </div>
       </div>
+
     </section>
   );
 };

@@ -23,7 +23,7 @@ const copyright = () => {
                 </div>
 
                 <div className="flex items-center text-sm">
-                    © Copyright Multiplier 2025 – All rights reserved
+                    © Copyright Tensorglade 2025 – All rights reserved
                 </div>
 
                 <div className="flex items-center space-x-4">

@@ -21,10 +21,10 @@ const Intro = () => {
 
                     <div className="grid grid-rows-2 lg:grid-rows-2 gap-8 items-center">
                         <h1 className="text-4xl md:text-5xl  lg:text-6xl font-bold text-black">
-                            Let's work<br />together
+                            How We<br />operate
                         </h1>
                         <p className="text-base md:text-xl text-black">
-                            We are a team of capable and creative engineers who develop software products and provide digital solutions to grow your ideas.
+                        We prioritize client confidence and project success. That's why we start with a no-obligation 1-month trial and free technical research. Our development methodology is based on stage-wise delivery, significantly reducing risk and ensuring clear, consistent progress. Experience the difference of a transparent and client-centric process.
                         </p>
                     </div>
                 </div>

@@ -1,13 +1,36 @@
 "use client"; // For smooth scrolling in Next.js 13+
 
 import { Link } from "react-scroll";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Add scroll event listener to detect when page is scrolled
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white z-50">
+    <nav 
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
+                 ${scrolled 
+                   ? 'bg-white/10 backdrop-blur-md shadow-sm' 
+                   : 'bg-transparent'}`}
+    >
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         <h1 className="text-2xl font-bold text-hoverprimary">TensorGlade</h1>
         

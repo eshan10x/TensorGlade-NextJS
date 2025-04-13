@@ -11,21 +11,21 @@ export const projectData = [
       title: "Project Two",
       description: "This is a brief description of Project Two.",
       link: "/",
-      image: "/service1.png",
+      image: "",
     },
     {
       id: 3,
       title: "Project Three",
       description: "This is a brief description of Project Three.",
       link: "/",
-      image: "/service1.png",
+      image: "",
     },
     {
       id: 4,
       title: "Project Four",
       description: "This is a brief description of Project Four.",
       link: "/",
-      image: "/service1.png",
+      image: "",
     },
   ];
   
