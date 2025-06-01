@@ -5,6 +5,7 @@ export const projectData = [
       description: "This is a brief description of Project One.",
       link: "/",
       image: "",
+      companyLogo: "/company-logo.png",
     },
     {
       id: 2,
@@ -12,6 +13,7 @@ export const projectData = [
       description: "This is a brief description of Project Two.",
       link: "/",
       image: "",
+      companyLogo: "/company-logo.png",
     },
     {
       id: 3,
@@ -19,6 +21,7 @@ export const projectData = [
       description: "This is a brief description of Project Three.",
       link: "/",
       image: "",
+      companyLogo: "/company-logo.png",
     },
     {
       id: 4,
@@ -26,6 +29,7 @@ export const projectData = [
       description: "This is a brief description of Project Four.",
       link: "/",
       image: "",
+      companyLogo: "/company-logo.png",
     },
   ];
   

@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { Facebook, X, Instagram, Youtube, Linkedin, MessageSquare } from 'lucide-react';
+import { Facebook, X, Instagram, Youtube, Linkedin } from 'lucide-react';
 
 const copyright = () => {
     return (
@@ -11,15 +10,6 @@ const copyright = () => {
                         alt="TensorGlade Logo"
                         className="h-6"
                     />
-                </div>
-
-                <div className="flex space-x-4 text-sm">
-                    <Link href="/privacy-policy" className="hover:underline">
-                        Privacy Policy
-                    </Link>
-                    <Link href="/terms-of-service" className="hover:underline">
-                        Terms of Service
-                    </Link>
                 </div>
 
                 <div className="flex items-center text-sm">

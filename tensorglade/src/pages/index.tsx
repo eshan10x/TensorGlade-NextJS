@@ -12,7 +12,7 @@ export default function Home() {
     <div className="w-full min-h-screen">
       <Navbar />
       <main className="w-full max-w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 mt-20">
-        <div className="flex flex-col gap-16 md:gap-20 lg:gap-24 mx-auto">
+        <div className="flex flex-col mx-auto">
           <About />
           <Intro />
           <Services />

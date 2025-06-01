@@ -14,6 +14,17 @@ export default {
         primarytext: "#000000",
         hoverprimary: "#FF7518"
       },
+      fontFamily: {
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"San Francisco"',
+          '"Helvetica Neue"',
+          'Helvetica',
+          'Arial',
+          'sans-serif'
+        ],
+      },
     },
   },
   plugins: [],

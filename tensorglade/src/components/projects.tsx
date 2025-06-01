@@ -5,11 +5,12 @@ import { projectData } from "@/data/projectdata";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide,  } from "swiper/react";
+import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from "swiper/modules";
 
 const Projects = () => {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <section id="projects" className="w-full py-16 bg-white">

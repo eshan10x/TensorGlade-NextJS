@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
+
 interface VideoContainerProps {
   videoSrc: string;
   posterSrc?: string;
@@ -96,7 +97,7 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
           </video>
 
           {/* Controls Container */}
-          {/* <div className="absolute bottom-4 right-4 flex gap-2">
+          <div className="absolute bottom-4 right-4 flex gap-2">
             <button 
               className="bg-white bg-opacity-90 rounded-full p-3 shadow-lg hover:bg-opacity-100 transition-all duration-200"
               onClick={toggleMute}
@@ -118,7 +119,7 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
                 <Play className="text-blue-600 w-6 h-6" />
               }
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ const Intro = () => {
             <div className="relative max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-8 md:py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div>
-                        <div className="mt-4">
+                        <div className="">
                             <Image
                                 src="/howwework.png"
                                 alt="Team working together"
@@ -24,7 +24,7 @@ const Intro = () => {
                             How We<br />operate
                         </h1>
                         <p className="text-base md:text-xl text-black">
-                        We prioritize client confidence and project success. That's why we start with a no-obligation 1-month trial and free technical research. Our development methodology is based on stage-wise delivery, significantly reducing risk and ensuring clear, consistent progress. Experience the difference of a transparent and client-centric process.
+                            We prioritize client confidence and project success. That&#39;s why we start with a no-obligation 1-month trial and free technical research. Our development methodology is based on stage-wise delivery, significantly reducing risk and ensuring clear, consistent progress. Experience the difference of a transparent and client-centric process.
                         </p>
                     </div>
                 </div>
