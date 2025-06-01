@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
-
 interface VideoContainerProps {
   videoSrc: string;
   posterSrc?: string;
@@ -81,7 +80,7 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
   };
 
   return (
-    <div className={` mx-auto ${className}`}>
+    <div className={`mx-auto ${className}`}>
       <div className="relative rounded-3xl overflow-hidden p-1">
         <div className="bg-black rounded-xl overflow-hidden relative">
           <video
@@ -96,30 +95,31 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
             Your browser does not support the video tag.
           </video>
 
-          {/* Controls Container */}
-          <div className="absolute bottom-4 right-4 flex gap-2">
+          {/* Enhanced Controls Container - More visible and prominent */}
+          <div className="absolute bottom-6 right-6 flex gap-4 z-40">
             <button 
-              className="bg-white bg-opacity-90 rounded-full p-3 shadow-lg hover:bg-opacity-100 transition-all duration-200"
+              className="bg-white backdrop-blur-sm rounded-full p-4 shadow-xl hover:bg-white hover:scale-110 transition-all duration-300 border-2 border-white/20"
               onClick={toggleMute}
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted ? 
-                <VolumeX className="text-blue-600 w-6 h-6" /> : 
-                <Volume2 className="text-blue-600 w-6 h-6" />
+                <VolumeX className="text-blue-600 w-7 h-7" /> : 
+                <Volume2 className="text-blue-600 w-7 h-7" />
               }
             </button>
             
             <button 
-              className="bg-white bg-opacity-90 rounded-full p-3 shadow-lg hover:bg-opacity-100 transition-all duration-200"
+              className="bg-white backdrop-blur-sm rounded-full p-4 shadow-xl hover:bg-white hover:scale-110 transition-all duration-300 border-2 border-white/20"
               onClick={togglePlay}
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? 
-                <Pause className="text-blue-600 w-6 h-6" /> : 
-                <Play className="text-blue-600 w-6 h-6" />
+                <Pause className="text-blue-600 w-7 h-7" /> : 
+                <Play className="text-blue-600 w-7 h-7 ml-1" />
               }
             </button>
           </div>
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-transparent" />
         </div>
       </div>
     </div>
