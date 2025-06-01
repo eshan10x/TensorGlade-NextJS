@@ -15,7 +15,7 @@ const About = () => {
   const [showVideo, setShowVideo] = React.useState(false);
 
   return (
-    <section id="about" className="w-full text-center text-primarytext items-center">
+    <section id="about\" className="w-full text-center text-primarytext items-center">
       <div className="absolute inset-0 -top-16 z-0 overflow-hidden">
         <ThreeWaveBackground />
       </div>
